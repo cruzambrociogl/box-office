@@ -29,5 +29,5 @@ jobs:
         with:
           mode: publish
           project: prj_b4bwug7bjvjvda
-          url: https://ee96-2803-d100-f390-b23-b18a-99f-c08c-2a8c.ngrok-free.app
-          audience: https://ee96-2803-d100-f390-b23-b18a-99f-c08c-2a8c.ngrok-free.app
+          url: https://dda0-2803-d100-f390-b23-b18a-99f-c08c-2a8c.ngrok-free.app
+          audience: https://dda0-2803-d100-f390-b23-b18a-99f-c08c-2a8c.ngrok-free.app

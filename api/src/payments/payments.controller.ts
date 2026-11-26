@@ -15,7 +15,7 @@ export class PaymentsController {
   @HttpCode(200)
   async webhook(@Req() req: RawBodyRequest<Request>, @Headers('stripe-signature') signature: string) {
     const event = this.paymentsService.readWebhook(req.rawBody, signature);
-    if (event.type === 'paid') await this.ordersService.confirmPayment(event.orderId);
+    if (event.type === 'paid') await this.ordersService.confirmPayment(event.orderId, event.paymentIntentId);
     return { received: true };
   }
 }

@@ -8,7 +8,7 @@ export type TicketType = { id: string; name: string; price_cents: number; capaci
 export type EventDetail = EventSummary & { description: string; status: string; ticketTypes: TicketType[] };
 export type Order = {
   id: string;
-  status: 'held' | 'paid' | 'expired';
+  status: 'held' | 'paid' | 'expired' | 'refunded';
   quantity: number;
   buyer_name: string;
   expires_at: string;
@@ -49,6 +49,9 @@ export const holdSeats = (order: { ticketTypeId: string; quantity: number; buyer
   fetch('/api/orders', { method: 'POST', ...json(order) }).then(answer<{ orderId: string; checkoutUrl: string; expiresAt: string }>);
 
 export const getOrder = (id: string, fetch: Fetch = globalThis.fetch) => fetch(`/api/orders/${id}`).then(answer<Order>);
+
+export const refundOrder = (id: string, fetch: Fetch = globalThis.fetch) =>
+  fetch(`/api/orders/${id}/refund`, { method: 'POST' }).then(answer<{ refunded: boolean; amountCents: number }>);
 
 export const scanTicket = (scan: { eventId: string; code: string }, fetch: Fetch = globalThis.fetch) =>
   fetch('/api/check-ins', { method: 'POST', ...json(scan) }).then(answer<{ admitted: boolean }>);

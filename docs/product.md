@@ -18,4 +18,6 @@
 - **A ticket gets in once**, and only to its own event.
 - **Payment is what Stripe says.** The order is paid when Stripe's webhook says so, never when the
   buyer comes back from the checkout page. Stripe may say it twice; the second time changes nothing.
+- **A refund is in full, before the event starts**, and only if no ticket of the order has been
+  used. The tickets are void from then on; a refunded ticket at the door is refused in those words.
 - **Emails never hold anyone up.** Tickets and reminders are sent in the background.

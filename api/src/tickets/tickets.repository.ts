@@ -23,6 +23,11 @@ export class TicketsRepository {
     return this.db.selectFrom('tickets').selectAll().where('code', '=', code).executeTakeFirst();
   }
 
+  /** A refunded order's tickets no longer get in. */
+  voidForOrder(orderId: string) {
+    return this.db.updateTable('tickets').set({ status: 'void' }).where('order_id', '=', orderId).execute();
+  }
+
   markUsed(id: string) {
     return this.db.updateTable('tickets').set({ status: 'used' }).where('id', '=', id).execute();
   }

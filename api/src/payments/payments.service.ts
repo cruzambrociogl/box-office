@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import Stripe from 'stripe';
 
 export type PaymentEvent =
-  | { type: 'paid'; orderId: string }
+  | { type: 'paid'; orderId: string; paymentIntentId: string | null }
   | { type: 'ignored' };
 
 /** Everything that talks to Stripe: the checkout page a buyer pays on, and what Stripe tells us back. */
@@ -42,6 +42,13 @@ export class PaymentsService {
     const session = event.data.object;
     const orderId = session.metadata?.orderId;
     if (!orderId || session.payment_status !== 'paid') return { type: 'ignored' };
-    return { type: 'paid', orderId };
+    const paymentIntentId = typeof session.payment_intent === 'string' ? session.payment_intent : (session.payment_intent?.id ?? null);
+    return { type: 'paid', orderId, paymentIntentId };
+  }
+
+  /** Gives a buyer's payment back, in full. */
+  async refund(paymentIntentId: string) {
+    const refund = await this.stripe.refunds.create({ payment_intent: paymentIntentId });
+    return { refundId: refund.id, amountCents: refund.amount };
   }
 }

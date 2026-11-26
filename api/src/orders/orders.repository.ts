@@ -42,8 +42,16 @@ export class OrdersRepository {
     return this.db.updateTable('orders').set({ stripe_session_id: sessionId }).where('id', '=', id).execute();
   }
 
-  markPaid(id: string, paidAt: Date) {
-    return this.db.updateTable('orders').set({ status: 'paid', paid_at: paidAt }).where('id', '=', id).execute();
+  markPaid(id: string, paidAt: Date, paymentIntentId: string | null) {
+    return this.db
+      .updateTable('orders')
+      .set({ status: 'paid', paid_at: paidAt, payment_intent_id: paymentIntentId })
+      .where('id', '=', id)
+      .execute();
+  }
+
+  markRefunded(id: string) {
+    return this.db.updateTable('orders').set({ status: 'refunded' }).where('id', '=', id).execute();
   }
 
   /** Lets go of one hold at once: its checkout could not be opened. */

@@ -14,6 +14,9 @@ buyer is sent to Stripe to pay. Stripe tells us when the payment went through (a
 is the order paid. The tickets are issued and emailed **in the background**, so the buyer never waits
 on email. Seats nobody paid for go back on sale after the hold expires.
 
+A buyer can give their tickets back before the event starts, as long as nobody from the order has
+been in yet: Stripe returns the money, the codes stop working and the seats go back on sale.
+
 Every morning at nine, everyone with tickets to something in the next day gets a reminder.
 
 An organiser can give a webhook address of their own: the box office tells it each time tickets sell.

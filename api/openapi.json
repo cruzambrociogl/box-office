@@ -182,6 +182,28 @@
         ]
       }
     },
+    "/api/orders/{id}/refund": {
+      "post": {
+        "operationId": "refundOrder",
+        "summary": "Give a paid order back, before its event starts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/check-ins": {
       "post": {
         "operationId": "scanTicket",

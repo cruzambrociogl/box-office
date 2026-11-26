@@ -62,12 +62,12 @@ export class OrdersService {
    * Stripe confirms the payment. The order becomes paid and its tickets are issued in the
    * background. Stripe may send the same event twice; the second time changes nothing.
    */
-  async confirmPayment(orderId: string, now = new Date()) {
+  async confirmPayment(orderId: string, paymentIntentId: string | null, now = new Date()) {
     const order = await this.orders.find(orderId);
     if (!order) throw new NotFoundException('No order has this id');
-    if (order.status === 'paid') return;
+    if (order.status === 'paid' || order.status === 'refunded') return;
     if (order.status === 'expired') throw new ConflictException('The hold expired before the payment arrived');
-    await this.orders.markPaid(order.id, now);
+    await this.orders.markPaid(order.id, now, paymentIntentId);
     await this.jobs.queue({
       name: 'issue-tickets',
       data: { orderId: order.id, eventId: order.event_id, quantity: order.quantity, buyerEmail: order.buyer_email, buyerName: order.buyer_name },

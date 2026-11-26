@@ -36,8 +36,9 @@ export interface OrdersTable {
   quantity: number;
   buyer_name: string;
   buyer_email: string;
-  status: 'held' | 'paid' | 'expired';
+  status: 'held' | 'paid' | 'expired' | 'refunded';
   stripe_session_id: string | null;
+  payment_intent_id: Generated<string | null>;
   expires_at: Date;
   paid_at: Date | null;
   created_at: CreatedAt;
@@ -48,7 +49,7 @@ export interface TicketsTable {
   order_id: string;
   event_id: string;
   code: string;
-  status: 'valid' | 'used';
+  status: 'valid' | 'used' | 'void';
   created_at: CreatedAt;
 }
 
@@ -58,6 +59,14 @@ export interface CheckInsTable {
   scanned_at: ColumnType<Date, Date | undefined, never>;
 }
 
+export interface RefundsTable {
+  id: Generated<string>;
+  order_id: string;
+  amount_cents: number;
+  stripe_refund_id: string;
+  created_at: CreatedAt;
+}
+
 export interface Database {
   organisers: OrganisersTable;
   events: EventsTable;
@@ -65,4 +74,5 @@ export interface Database {
   orders: OrdersTable;
   tickets: TicketsTable;
   check_ins: CheckInsTable;
+  refunds: RefundsTable;
 }

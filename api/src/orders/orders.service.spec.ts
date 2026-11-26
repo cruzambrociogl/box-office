@@ -69,20 +69,20 @@ describe('Holding seats', () => {
 describe('Confirming a payment', () => {
   it('marks the order paid and queues its tickets', async () => {
     const { service, orders, jobs } = setup();
-    await service.confirmPayment('o1', now);
-    expect(orders.markPaid).toHaveBeenCalledWith('o1', now);
+    await service.confirmPayment('o1', 'pi_1', now);
+    expect(orders.markPaid).toHaveBeenCalledWith('o1', now, 'pi_1');
     expect(jobs.queue).toHaveBeenCalledWith(expect.objectContaining({ name: 'issue-tickets' }));
   });
 
   it('ignores a payment it has already recorded', async () => {
     const { service, orders, jobs } = setup({ order: { ...held, status: 'paid' } });
-    await service.confirmPayment('o1', now);
+    await service.confirmPayment('o1', 'pi_1', now);
     expect(orders.markPaid).not.toHaveBeenCalled();
     expect(jobs.queue).not.toHaveBeenCalled();
   });
 
   it('refuses a payment that arrives after the hold expired', async () => {
     const { service } = setup({ order: { ...held, status: 'expired' } });
-    await expect(service.confirmPayment('o1', now)).rejects.toThrow(ConflictException);
+    await expect(service.confirmPayment('o1', 'pi_1', now)).rejects.toThrow(ConflictException);
   });
 });

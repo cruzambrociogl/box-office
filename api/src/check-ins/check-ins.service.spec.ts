@@ -24,6 +24,11 @@ describe('Checking in at the door', () => {
     expect(checkIns.record).not.toHaveBeenCalled();
   });
 
+  it('refuses a ticket from a refunded order', async () => {
+    const { service } = setup({ ...valid, status: 'void' });
+    await expect(service.scan({ eventId: 'e1', code: 'ABCD2345' })).rejects.toThrow('This ticket was refunded');
+  });
+
   it('refuses a ticket for another event', async () => {
     const { service } = setup(valid);
     await expect(service.scan({ eventId: 'e2', code: 'ABCD2345' })).rejects.toThrow(ConflictException);

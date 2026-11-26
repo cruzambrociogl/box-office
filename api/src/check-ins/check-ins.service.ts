@@ -14,6 +14,7 @@ export class CheckInsService {
     const ticket = await this.tickets.findByCode(input.code.trim().toUpperCase());
     if (!ticket) throw new NotFoundException('No ticket has this code');
     if (ticket.event_id !== input.eventId) throw new ConflictException('This ticket is for another event');
+    if (ticket.status === 'void') throw new ConflictException('This ticket was refunded');
     if (ticket.status === 'used') throw new ConflictException('This ticket was already scanned');
     const checkIn = await this.checkIns.record(ticket.id);
     await this.tickets.markUsed(ticket.id);

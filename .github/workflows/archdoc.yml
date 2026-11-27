@@ -1,0 +1,33 @@
+name: archdoc
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  # Reads the code where it is, offline, and keeps .archdoc/record.json as an artifact of the run.
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cruzambrociogl/archdoc@develop
+        with:
+          mode: generate
+
+  # Checks out nothing: takes the record, asks GitHub for a token made for archdoc, and sends it.
+  publish:
+    needs: generate
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: cruzambrociogl/archdoc@develop
+        with:
+          mode: publish
+          project: prj_vpv6im56t3qzbz
+          url: https://dda0-2803-d100-f390-b23-b18a-99f-c08c-2a8c.ngrok-free.app
+          audience: https://dda0-2803-d100-f390-b23-b18a-99f-c08c-2a8c.ngrok-free.app
